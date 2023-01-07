@@ -4,6 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/l20j45/Cats4Rubi/issues"
   },
-  "homepage": "https://github.com/l20j45/Cats4Rubi#readme",
+  "homepage":"https://l20j45.github.io/Cats4Rubi",
   "devDependencies": {
     "gh-pages": "^4.0.0"
   }
