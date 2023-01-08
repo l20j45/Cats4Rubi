@@ -8,38 +8,79 @@
     <title>Cats for rubi</title>
   </head>
   <body>
-    <h1>Cats for rubi</h1>
+    <h1>Cats</h1>
+    
+    <span id="spanErrorRandom"></span>
     <h2>Cats Random</h2>
     <section class="container">
-      <section class="card">
-        <h3 id="cardTitle1">Have</h3>
+      <article class="card">
+        <h3 id="cardTitle0">Have</h3>
+        <figure>
+          <img id="cardImage0" alt="" />
+        </figure>
+        <button onclick="reloadImages(0,0,0)">Change image</button
+        ><button onclick="saveFavorites()">Save in favorites</button>
+      </article>
+      <article class="card">
+        <h3 id="cardTitle1">a</h3>
         <figure>
           <img id="cardImage1" alt="" />
         </figure>
-        <button onclick="reload('',1)">ChangeImage</button>
-      </section>
-      <section class="card">
-        <h3 id="cardTitle2">a</h3>
+        <button onclick="reloadImages(0,1,0)">Change image</button
+        ><button onclick="reload('',2)">Save in favorites</button>
+      </article>
+      <article class="card">
+        <h3 id="cardTitle2">nice</h3>
         <figure>
           <img id="cardImage2" alt="" />
         </figure>
-        <button onclick="reload('',2)">ChangeImage</button>
-      </section>
-      <section class="card">
-        <h3 id="cardTitle3">nice</h3>
+        <button onclick="reloadImages(0,2,0)">Change image</button
+        ><button onclick="reload('',3)">Save in favorites</button>
+      </article>
+      <article class="card">
+        <h3 id="cardTitle3">day</h3>
         <figure>
           <img id="cardImage3" alt="" />
         </figure>
-        <button onclick="reload('',3)">ChangeImage</button>
+        <button onclick="reloadImages(0,3,0)">Change image</button
+        ><button onclick="reload('',4)">Save in favorites</button>
+      </article>
+    </section>
+    <span id="spanErrorFavorite"></span>
+    <h3>favorite cats</h3>
+    <section id="favorites" class="container favoritesCards">
+      <section class="card">
+        <h3 id="cardTitle0">Have</h3>
+        <figure>
+          <img id="cardImageFavorite0" alt="" />
+        </figure>
+        <button onclick="">Change image</button>
+        <button onclick="">Save in favorites</button>
       </section>
       <section class="card">
-        <h3 id="cardTitle4">day</h3>
+        <h3 id="cardTitle1">Have</h3>
         <figure>
-          <img id="cardImage4" alt="" />
+          <img id="cardImageFavorite1" alt="" />
         </figure>
-        <button onclick="reload('',4)">ChangeImage</button>
+        <button onclick="">Change image</button>
+        <button onclick="">Save in favorites</button>
       </section>
-      
+      <section class="card">
+        <h3 id="cardTitle2">Have</h3>
+        <figure>
+          <img id="cardImageFavorite2" alt="" />
+        </figure>
+        <button onclick="">Change image</button>
+        <button onclick="">Save in favorites</button>
+      </section>
+      <section class="card">
+        <h3 id="cardTitle3">Have</h3>
+        <figure>
+          <img id="cardImageFavorite3" alt="" />
+        </figure>
+        <button onclick="">Change image</button>
+        <button onclick="">Save in favorites</button>
+      </section>
     </section>
   </body>
   <script src="./main.js"></script>
