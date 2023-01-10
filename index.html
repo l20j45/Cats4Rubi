@@ -8,14 +8,15 @@
     <title>Cats for rubi</title>
   </head>
   <body>
-    <h1>Cats</h1>
+    <h1>Cats for rubi</h1>
 
     <section class="UploadingPhoto">
       <h2>Upload your cats images</h2>
       <form action="" id="uploadingForm">
+        <label for="file" class="custom-file-upload">Selecciona foto</label>
         <input type="file" name="file" id="file" onchange="previewImage()" />
         <img id="preview" />
-        <button type="button" onclick="uploadPhoto()">Upload Image</button>
+        <button type="button" id="submitImage" onclick="uploadPhoto()">Upload Image</button>
       </form>
     </section>
 
