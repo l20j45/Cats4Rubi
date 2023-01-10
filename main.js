@@ -3,14 +3,18 @@ const apiKey =
 let apiEndpoints = {
   0: "https://api.thecatapi.com/v1/images/search?limit=4",
   1: `https://api.thecatapi.com/v1/images/search?${apiKey}`,
-  2: `https://api.thecatapi.com/v1/favourites`,
-  3: `https://api.thecatapi.com/v1/favourites`,
+  2: `https://api.thecatapi.com/v1/favourites?api_key=${apiKey}`,
+  3: `https://api.thecatapi.com/v1/favourites/`,
+  4: `https://api.thecatapi.com/v1/favourites?limit=4&api_key=${apiKey}`,
 };
-let tagClases = {
+/* let tagClases = {
   0: "#cardImage",
   1: "#cardImageFavorite",
-};
-let imagesTags = [0, 1, 2, 3];
+}; */
+
+const API_URL_FAVOTITES_DELETE = (id) => `https://api.thecatapi.com/v1/favourites/`;
+
+let titles = ["Have", "a", "nice", "day"];
 
 /* const petition = async (urlApi) => {
   const response = await (await fetch(urlApi)).json();
@@ -24,11 +28,30 @@ async function initialStatesRandom() {
       throw new Error(
         `Error de petición HTTP en initialStatesRandom: ${res.status}`
       );
-    const jsonresponse = await res.json();
+    const data = await res.json();
 
-    for (element of imagesTags) {
-      const img = document.querySelector(`${tagClases[0]}${element}`);
-      img.src = jsonresponse[element].url;
+    for (let element = 0; element < 4; element++) {
+      const cardRandomContainer = document.querySelector(".container");
+      const article = document.createElement("article");
+      const h3 = document.createElement("h3");
+      const figure = document.createElement("figure");
+      const img = document.createElement("img");
+      const btnReload = document.createElement("button");
+      const btnFavorite = document.createElement("button");
+      article.classList.add("card");
+      h3.classList.add("cardTitle");
+      h3.innerText = titles[element];
+      img.classList.add("cardImage");
+      btnReload.classList.add("reloadRandom");
+      btnReload.innerText = "Change image";
+      btnFavorite.classList.add("saveFavorite");
+      btnFavorite.innerText = "Save in favorites";
+      figure.append(img);
+      article.append(h3, figure, btnReload, btnFavorite);
+      cardRandomContainer.append(article);
+      img.src = data[element].url;
+      btnReload.onclick = () => reloadImages(0, element, 0);
+      btnFavorite.onclick = () => saveFavouriteMichis(data[element].id);
     }
   } catch (error) {
     const spanErrorRandom = document.getElementById("spanErrorRandom");
@@ -41,19 +64,40 @@ async function initialStatesFavorites() {
   try {
     const res = await fetch(`${apiEndpoints[3]}`, {
       headers: {
+        "content-type": "application/json",
         'x-api-key': apiKey,
-        'content-type': 'application/json'
-    },
+      },
     });
-    const jsonresponse = await res.json();
     if (res.status !== 200)
       throw new Error(
         `Error de petición HTTP en initialStatesFavorites: ${res}`
       );
-    for (element of imagesTags) {
-      const img2 = document.querySelector(`${tagClases[1]}${element}`);
-      img2.src = jsonresponse[element]?.image.url;
-    }
+    const data = await res.json();
+    const cardFavoriteContainer = document.querySelector(".favoritesCards");
+    cardFavoriteContainer.innerHTML="";
+    data.forEach((element) => {
+      
+      const article = document.createElement("article");
+      const h3 = document.createElement("h3");
+      const figure = document.createElement("figure");
+      const img = document.createElement("img");
+      const btnErase = document.createElement("button");
+
+      article.classList.add("card");
+      h3.classList.add("cardTtitle");
+      img.classList.add("cardImageFavorite");
+      btnErase.classList.add("eraseFavorite");
+      btnErase.innerText = "erase Favorite";
+
+      img.src = element.image.url;
+
+
+      btnErase.onclick = () => deleteFavourite(element.id);
+
+      figure.append(img);
+      article.append(h3, figure, btnErase);
+      cardFavoriteContainer.appendChild(article);
+    });
   } catch (error) {
     console.error(error.message);
     const spanErrorFavorite = document.getElementById("spanErrorFavorite");
@@ -61,24 +105,26 @@ async function initialStatesFavorites() {
   }
 }
 
-async function saveFavorites() {
+async function saveFavouriteMichis(id) {
   try {
-    const res = await fetch(`${apiEndpoints[2]}`, {
+    const res = await fetch(`${apiEndpoints[3]}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key:": `${apiKey}`,
+        'x-api-key': apiKey,
       },
       body: JSON.stringify({
-        image_id: "dje",
+        image_id: id,
       }),
     });
-
+    //const data = await res.json();
+    alert("Imagen Guardada");
+    initialStatesFavorites();
     if (res.status !== 200)
       throw new Error(
-        `Error de petición HTTP en initialStatesRandom: ${res.status}`
+        `Error de petición HTTP en initialStatesFavorites: ${res}`
       );
-  } catch (error) {
+  } catch {
     const spanErrorRandom = document.getElementById("spanErrorRandom");
     spanErrorRandom.innerText = `${error.message}`;
     console.error(error.message);
@@ -88,18 +134,65 @@ async function saveFavorites() {
 async function reloadImages(Api = 0, identifier = 0, form = 0) {
   try {
     const res = await fetch(`${apiEndpoints[Api]}`);
-    const jsonresponse = await res.json();
-    const img = document.querySelector(`${tagClases[form]}${identifier}`);
-    img.src = jsonresponse[0].url;
+    const data = await res.json();
+    const imagenes = document.getElementsByClassName("cardImage");
+    imagenes[identifier].src = data[0].url;
+    const btnFavorite = document.getElementsByClassName("saveFavorite");
+    btnFavorite[identifier].onclick = () => saveFavouriteMichis(data[0].id);
   } catch (error) {
     console.error(error.message);
   }
 }
 
-initialStatesRandom();
-//initialStatesFavorites();
+async function deleteFavourite(id) {
+  try {
+    const res = await fetch(`${apiEndpoints[3]}${id}`, {
+      method: "DELETE",
+      headers: {
+        'x-api-key': apiKey,
+      },
+    });
+    alert('Imagen eliminada');
+    const data = await res.json();
+    initialStatesFavorites();
+    if (res.status !== 200)
+      throw new Error(
+        `Error de petición HTTP en initialStatesFavorites: ${res}`
+      );
+  } catch(error) {
+    const spanErrorRandom = document.getElementById("spanErrorRandom");
+    spanErrorRandom.innerText = `${error.message}`;
+    console.error(error.message);
+  }
+}
 
-/* reload("", 1);
-reload("", 2);
-reload("", 3);
-reload("", 4); */
+
+/* async function initialStatesRandom() {
+  try {
+    const res = await fetch(`${apiEndpoints[0]}`);
+    if (res.status !== 200)
+      throw new Error(
+        `Error de petición HTTP en initialStatesRandom: ${res.status}`
+      );
+    const data = await res.json();
+
+    const imagenes = document.getElementsByClassName("cardImage");
+    const botonReload = document.getElementsByClassName("reloadRandom");
+    const botonSave = document.getElementsByClassName("saveFavorite");
+
+    for (let element = 0; element < imagenes.length; element++) {
+      imagenes[element].src = data[element].url;
+      botonReload[element].onclick = () =>reloadImages(0,element,0);
+      botonSave[element].onclick = () =>saveFavouriteMichis(data[element].id);
+    }
+
+  } catch (error) {
+    const spanErrorRandom = document.getElementById("spanErrorRandom");
+    spanErrorRandom.innerText = `${error.message}`;
+    console.error(error.message);
+  }
+} */
+
+//initialStatesRandom();
+initialStatesRandom();
+initialStatesFavorites();
