@@ -1,18 +1,18 @@
 const apiKey =
   "live_hzpahfMJlivoaLO6wT3jeoOdJJcVgfHnOkrbP4uBsMxtXHn2ul4kdl86f77n9BPN";
 let apiEndpoints = {
-  0: "https://api.thecatapi.com/v1/images/search?limit=4",
-  1: `https://api.thecatapi.com/v1/images/search?${apiKey}`,
-  2: `https://api.thecatapi.com/v1/favourites?api_key=${apiKey}`,
-  3: `https://api.thecatapi.com/v1/favourites/`,
-  4: `https://api.thecatapi.com/v1/favourites?limit=4&api_key=${apiKey}`,
+  searchOneImages: "https://api.thecatapi.com/v1/images/search",
+  searchFourImages: "https://api.thecatapi.com/v1/images/search?limit=4",
+  favoritesImages: `https://api.thecatapi.com/v1/favourites/`,
+  uploadImages: `https://api.thecatapi.com/v1/images/upload`,
 };
 /* let tagClases = {
   0: "#cardImage",
   1: "#cardImageFavorite",
 }; */
 
-const API_URL_FAVOTITES_DELETE = (id) => `https://api.thecatapi.com/v1/favourites/`;
+const API_URL_FAVOTITES_DELETE = (id) =>
+  `https://api.thecatapi.com/v1/favourites/`;
 
 let titles = ["Have", "a", "nice", "day"];
 
@@ -23,7 +23,7 @@ let titles = ["Have", "a", "nice", "day"];
 
 async function initialStatesRandom() {
   try {
-    const res = await fetch(`${apiEndpoints[0]}`);
+    const res = await fetch(`${apiEndpoints["searchFourImages"]}`);
     if (res.status !== 200)
       throw new Error(
         `Error de petición HTTP en initialStatesRandom: ${res.status}`
@@ -62,10 +62,10 @@ async function initialStatesRandom() {
 
 async function initialStatesFavorites() {
   try {
-    const res = await fetch(`${apiEndpoints[3]}`, {
+    const res = await fetch(`${apiEndpoints["favoritesImages"]}`, {
       headers: {
         "content-type": "application/json",
-        'x-api-key': apiKey,
+        "x-api-key": apiKey,
       },
     });
     if (res.status !== 200)
@@ -74,9 +74,8 @@ async function initialStatesFavorites() {
       );
     const data = await res.json();
     const cardFavoriteContainer = document.querySelector(".favoritesCards");
-    cardFavoriteContainer.innerHTML="";
+    cardFavoriteContainer.innerHTML = "";
     data.forEach((element) => {
-      
       const article = document.createElement("article");
       const h3 = document.createElement("h3");
       const figure = document.createElement("figure");
@@ -90,7 +89,6 @@ async function initialStatesFavorites() {
       btnErase.innerText = "erase Favorite";
 
       img.src = element.image.url;
-
 
       btnErase.onclick = () => deleteFavourite(element.id);
 
@@ -107,11 +105,11 @@ async function initialStatesFavorites() {
 
 async function saveFavouriteMichis(id) {
   try {
-    const res = await fetch(`${apiEndpoints[3]}`, {
+    const res = await fetch(`${apiEndpoints["favoritesImages"]}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'x-api-key': apiKey,
+        "x-api-key": apiKey,
       },
       body: JSON.stringify({
         image_id: id,
@@ -133,7 +131,7 @@ async function saveFavouriteMichis(id) {
 
 async function reloadImages(Api = 0, identifier = 0, form = 0) {
   try {
-    const res = await fetch(`${apiEndpoints[Api]}`);
+    const res = await fetch(`${apiEndpoints["searchOneImages"]}`);
     const data = await res.json();
     const imagenes = document.getElementsByClassName("cardImage");
     imagenes[identifier].src = data[0].url;
@@ -146,26 +144,72 @@ async function reloadImages(Api = 0, identifier = 0, form = 0) {
 
 async function deleteFavourite(id) {
   try {
-    const res = await fetch(`${apiEndpoints[3]}${id}`, {
+    const res = await fetch(`${apiEndpoints["favoritesImages"]}${id}`, {
       method: "DELETE",
       headers: {
-        'x-api-key': apiKey,
+        "x-api-key": apiKey,
       },
     });
-    alert('Imagen eliminada');
+    alert("Imagen eliminada");
     const data = await res.json();
     initialStatesFavorites();
     if (res.status !== 200)
       throw new Error(
         `Error de petición HTTP en initialStatesFavorites: ${res}`
       );
-  } catch(error) {
+  } catch (error) {
     const spanErrorRandom = document.getElementById("spanErrorRandom");
     spanErrorRandom.innerText = `${error.message}`;
     console.error(error.message);
   }
 }
 
+async function uploadPhoto() {
+  const form = document.getElementById("uploadingForm");
+  const formData = new FormData(form);
+  console.log(formData.get("file"));
+  try {
+    const res = await fetch(apiEndpoints["uploadImages"], {
+      method: 'POST',
+      headers: {
+        "X-API-KEY": apiKey,
+      },
+      body: formData,
+    })
+
+    if (res.status !== 201)
+      throw new Error(
+        `Error de petición HTTP en upload: ${res}`
+      );
+
+
+    const data = await res.json();
+    console.log("Foto de michi subida :)");
+    console.log({ data });
+    console.log(data.url);
+    saveFavouriteMichis(data.id);
+
+  } catch (error) {
+
+    const spanErrorRandom = document.getElementById("spanErrorRandom");
+    spanErrorRandom.innerText = `${error.message}`;
+    console.error(error.message);
+
+  }
+}
+
+const previewImage = () => {
+  const file = document.getElementById("file").files;
+  console.log(file);
+  if (file.length > 0) {
+    const fileReader = new FileReader();
+
+    fileReader.onload = function(e) {
+      document.getElementById("preview").setAttribute("src", e.target.result);
+    };
+    fileReader.readAsDataURL(file[0]);
+  }
+}
 
 /* async function initialStatesRandom() {
   try {

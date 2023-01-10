@@ -10,16 +10,21 @@
   <body>
     <h1>Cats</h1>
 
+    <section class="UploadingPhoto">
+      <h2>Upload your cats images</h2>
+      <form action="" id="uploadingForm">
+        <input type="file" name="file" id="file" onchange="previewImage()" />
+        <img id="preview" />
+        <button type="button" onclick="uploadPhoto()">Upload Image</button>
+      </form>
+    </section>
+
     <span id="spanErrorRandom"></span>
     <h2>Cats Random</h2>
-    <section class="container">
-
-    </section>
+    <section class="container"></section>
     <span id="spanErrorFavorite"></span>
     <h3>favorite cats</h3>
-    <section id="favorites" class="container favoritesCards">
-      
-    </section>
+    <section id="favorites" class="container favoritesCards"></section>
   </body>
   <script src="./main.js"></script>
 </html>

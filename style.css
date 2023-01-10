@@ -47,6 +47,28 @@ body h2 {
   }
 }
 
+.UploadingPhoto {
+  display: flex;
+  flex-direction: column;
+}
+.UploadingPhoto h2 {
+  text-align: center;
+}
+.UploadingPhoto form {
+  display: flex;
+  flex-direction: column;
+}
+.UploadingPhoto form button {
+  width: 50%;
+  height: 3rem;
+  margin: 10px 25%;
+  border: none;
+  border-radius: 2rem;
+  background-color: #3b7d71;
+  color: white;
+  box-shadow: 2px 2px 10px black;
+}
+
 .card {
   width: 100%;
   height: auto;
